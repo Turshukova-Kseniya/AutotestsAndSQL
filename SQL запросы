@@ -1,0 +1,70 @@
+naked_seine@MSI ~
+$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/naked_seine/.ssh/id_rsa):
+/home/naked_seine/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/naked_seine/.ssh/id_rsa
+Your public key has been saved in /home/naked_seine/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:HPKS1kBJ2wRcaMQ3gDK4UJ9UwA5IDFmO8wkJUNw1O18 naked_seine@MSI
+The key's randomart image is:
++---[RSA 3072]----+
+|OX+ooXX*o        |
+|*==o+o**o        |
+|*..=o.*.o.E      |
+|.+ ..  X o       |
+|  o   + S        |
+|     . .         |
+|                 |
+|                 |
+|                 |
++----[SHA256]-----+
+
+naked_seine@MSI ~
+$ cat ~/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCs3LLMZY9N5j0xehrJYy8C8rrPGzxkSCzge6rP54putFwWQyk4+sEzRlFusX7WZA+Yk8ao6go+/y6r7t03nfLm8B8a3PnsliK6SjHJVmYv3RZvfkNNDbOuaQrjCHNfwz1oT+X/Za4FCMthMWQlZaVGvb0fSEbbzr30ul44QoyGr15Lp42dMsxGH4qrIgPHRAr1A37EWUGeXxOe5VjHocOkerdcbiSjI3a2/wiPLTOHf+iWRqOFGqoGEyiX0ebJmpvPb6NP/0bep12yhW4ijvJ7MghHKR2FN6AjPdt3RPxE0BeW7psNRquZdtY0U1F5myJxy46lUecebqQCsAjIbQ78m7PUmLIKsABAj7RynvcmHmnbv0tZ+dX/8AClIqTg1IGp5p+Q6YR5+6pp7EpzUb1F0zieL3LKYDAClAL27EcQwrubv6aHbmfKFCY5fbOHfwDAyzJLP1wqRGw/Jzx+cVhFdSSZxZ/s6neeaSK5h03BhWbloMPXFwYW9qzJt0PKT2U= naked_seine@MSI
+
+naked_seine@MSI ~
+$ ssh cc76b9ad-91ab-42bc-8350-78bac767917b@serverhub.praktikum-services.ru -p 4554
+morty@fb70773959fc:~$ psql -U morty -d scooter_rent
+Password for user morty:
+psql (11.18 (Debian 11.18-0+deb10u1))
+Type "help" for help.
+
+scooter_rent=# scooter_rent=# \dt
+           List of relations
+ Schema |     Name      | Type  | Owner
+--------+---------------+-------+-------
+ public | Couriers      | table | root
+ public | Orders        | table | root
+ public | SequelizeMeta | table | root
+(3 rows)
+
+scooter_rent=# SELECT c.login, COUNT(o.id) FROM "Orders" AS o INNER JOIN "Couriers" AS c ON o."courierId" = c.id WHERE o."inDelivery" = true GROUP BY c.id, c.login;
+ login | count
+-------+-------
+(0 rows)
+
+scooter_rent=# SELECT c.login, COUNT(o.id) FROM "Orders" AS o INNER JOIN "Couriers" AS c ON o."courierId" = c.id WHERE o."inDelivery" = true GROUP BY c.id, c.login;
+    login    | count
+-------------+-------
+ naked_seine |     2
+(1 row)
+
+scooter_rent=# SELECT track, CASE WHEN "finished" = true THEN 2 WHEN "cancelled" = true THEN -1 WHEN "inDelivery" = true THEN 1 ELSE 0 END AS status FROM "Orders";
+ track  | status
+--------+--------
+ 956545 |      2
+ 956545 |      2
+  82093 |      2
+  82093 |      2
+ 533528 |      1
+ 533528 |      1
+ 189829 |     -1
+ 281883 |      0
+(8 rows)
+
+scooter_rent=#
